@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>School Dashboard Prototype</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* small helpers to simulate charts/cards */
+    .card { @apply bg-white rounded-2xl shadow-sm p-5; }
+    .sidebar { width: 260px; }
+    .muted { color: #6b7280; }
+  </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-900">
+  <div class="min-h-screen flex">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar hidden md:block bg-slate-800 text-slate-100 p-6">
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 rounded-lg bg-slate-700 flex items-center justify-center text-xl font-bold">S</div>
+        <div>
+          <div class="text-lg font-semibold">SchoolSys</div>
+          <div class="text-sm muted">Admin Panel</div>
+        </div>
+      </div>
+      <nav class="space-y-2 text-sm">
+        <button data-target="overview" class="role-nav w-full text-left px-3 py-2 rounded-md hover:bg-slate-700 flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h18M3 17h18"/></svg> Dashboard</button>
+        <button class="role-nav w-full text-left px-3 py-2 rounded-md hover:bg-slate-700 flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3M3 11h18M5 21h14a2 2 0 002-2V9H3v10a2 2 0 002 2z"/></svg> Manage Departments</button>
+        <button class="role-nav w-full text-left px-3 py-2 rounded-md hover:bg-slate-700 flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14v7"/></svg> Manage Staff</button>
+        <button class="role-nav w-full text-left px-3 py-2 rounded-md hover:bg-slate-700 flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h18M3 17h18"/></svg> Attendance Reports</button>
+        <button class="role-nav w-full text-left px-3 py-2 rounded-md hover:bg-slate-700 flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.866-3.582 7-8 7V4a2 2 0 012-2h12a2 2 0 012 2v7c-4.418 0-8-3.134-8-7z"/></svg> System Settings</button>
+        <button class="w-full text-left px-3 py-2 rounded-md hover:bg-slate-700 flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a1 1 0 00-1-1H8a1 1 0 00-1 1v2M7 16h10l1 5H6l1-5z"/></svg> Announcements</button>
+        <div class="border-t border-slate-700 mt-6 pt-4">
+          <button class="w-full text-left px-3 py-2 rounded-md hover:bg-slate-700 flex items-center gap-3">Logout</button>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main area -->
+    <main class="flex-1 p-6">
+      <!-- Top bar -->
+      <header class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-4">
+          <h1 id="page-title" class="text-2xl font-semibold">Dashboard</h1>
+          <div class="hidden sm:flex items-center gap-2 text-sm muted">
+            <span class="px-3 py-1 bg-white rounded-full shadow-xs">Role:</span>
+            <select id="roleSelect" class="rounded-md p-2 border">
+              <option>Administration Admin</option>
+              <option>Department Head</option>
+              <option>Teaching Staff</option>
+              <option>Non-Teaching Staff</option>
+              <option>Student</option>
+              <option>Security Staff</option>
+              <option>Receptionist / Front Desk</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <button class="p-2 rounded-md bg-white shadow">🔔</button>
+          <div class="flex items-center gap-2">
+            <div class="w-10 h-10 rounded-full bg-slate-200"></div>
+            <div class="text-sm">
+              <div class="font-medium">Admin</div>
+              <div class="muted text-xs">admin@school.com</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Role Views container -->
+      <section id="rolesContainer">
+        <!-- Administration Admin View -->
+        <div class="role-view" data-role="Administration Admin">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+            <div class="card col-span-1">
+              <div class="text-sm muted">Total Students</div>
+              <div class="text-2xl font-bold mt-2">1,200</div>
+            </div>
+            <div class="card col-span-1">
+              <div class="text-sm muted">Total Staff</div>
+              <div class="text-2xl font-bold mt-2">75</div>
+            </div>
+            <div class="card col-span-1">
+              <div class="text-sm muted">Departments</div>
+              <div class="text-2xl font-bold mt-2">10</div>
+            </div>
+            <div class="card col-span-1">
+              <div class="text-sm muted">Today's Attendance</div>
+              <div class="text-2xl font-bold mt-2">96%</div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div class="card lg:col-span-2">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="font-semibold">Enrollment (last 6 months)</h3>
+                <div class="muted text-sm">View report</div>
+              </div>
+              <div class="h-40 bg-gradient-to-r from-slate-50 to-white rounded-md flex items-end p-4">
+                <!-- fake bars -->
+                <div class="flex gap-2 w-full items-end justify-between">
+                  <div class="h-20 w-8 bg-blue-500 rounded"></div>
+                  <div class="h-28 w-8 bg-blue-500 rounded"></div>
+                  <div class="h-24 w-8 bg-blue-500 rounded"></div>
+                  <div class="h-32 w-8 bg-blue-500 rounded"></div>
+                  <div class="h-30 w-8 bg-blue-500 rounded"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3 class="font-semibold mb-2">Notifications</h3>
+              <ul class="text-sm muted space-y-2">
+                <li>Parent-teacher meeting scheduled for next week</li>
+                <li>New circular: Winter break schedule</li>
+              </ul>
+            </div>
+
+            <div class="card lg:col-span-2">
+              <h3 class="font-semibold mb-3">Attendance Trend</h3>
+              <div class="h-40 bg-gradient-to-r from-slate-50 to-white rounded-md p-4 flex items-end">
+                <div class="w-full h-24 bg-slate-100 rounded"></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3 class="font-semibold mb-2">Quick Actions</h3>
+              <div class="flex gap-2">
+                <button class="px-3 py-2 rounded bg-blue-600 text-white">Add Department</button>
+                <button class="px-3 py-2 rounded border">Add Staff</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Department Head View -->
+        <div class="role-view hidden" data-role="Department Head">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div class="card">
+              <div class="text-sm muted">Faculty Count</div>
+              <div class="text-2xl font-bold mt-2">12</div>
+            </div>
+            <div class="card">
+              <div class="text-sm muted">Students</div>
+              <div class="text-2xl font-bold mt-2">240</div>
+            </div>
+            <div class="card">
+              <div class="text-sm muted">Pending Tasks</div>
+              <div class="text-2xl font-bold mt-2">4</div>
+            </div>
+          </div>
+          <div class="card mb-4">
+            <div class="flex items-center justify-between">
+              <h3 class="font-semibold">Upcoming Meetings / Events</h3>
+              <div class="muted text-sm">Manage</div>
+            </div>
+            <ul class="mt-3 space-y-2 muted">
+              <li>Staff meeting - Oct 20</li>
+              <li>Curriculum review - Nov 1</li>
+            </ul>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="card">
+              <h3 class="font-semibold mb-2">Attendance by Class</h3>
+              <div class="h-36 bg-slate-100 rounded"></div>
+            </div>
+            <div class="card">
+              <h3 class="font-semibold mb-2">Internal Marks</h3>
+              <div class="h-36 bg-slate-100 rounded"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Teaching Staff View -->
+        <div class="role-view hidden" data-role="Teaching Staff">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div class="card">
+              <div class="text-sm muted">Today Classes</div>
+              <div class="text-2xl font-bold mt-2">3</div>
+            </div>
+            <div class="card">
+              <div class="text-sm muted">Pending Attendance</div>
+              <div class="text-2xl font-bold mt-2">1</div>
+            </div>
+            <div class="card">
+              <div class="text-sm muted">Messages</div>
+              <div class="text-2xl font-bold mt-2">2</div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="card">
+              <h3 class="font-semibold mb-2">Today’s Schedule</h3>
+              <ul class="space-y-2 muted">
+                <li>09:00 - 10:00 | Math - Class 10A</li>
+                <li>10:15 - 11:15 | Physics - Class 11B</li>
+                <li>11:30 - 12:30 | Lab - Class 12C</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3 class="font-semibold mb-2">Quick Actions</h3>
+              <div class="space-y-2">
+                <button class="w-full px-3 py-2 rounded border">Take Attendance</button>
+                <button class="w-full px-3 py-2 rounded bg-blue-600 text-white">Enter Marks</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Non-Teaching Staff View -->
+        <div class="role-view hidden" data-role="Non-Teaching Staff">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div class="card"><div class="text-sm muted">Assigned Tasks</div><div class="text-2xl font-bold mt-2">5</div></div>
+            <div class="card"><div class="text-sm muted">Leave Balance</div><div class="text-2xl font-bold mt-2">6 days</div></div>
+            <div class="card"><div class="text-sm muted">Messages</div><div class="text-2xl font-bold mt-2">1</div></div>
+          </div>
+          <div class="card">
+            <h3 class="font-semibold mb-2">My Tasks</h3>
+            <ul class="space-y-2 muted">
+              <li>Inventory check - Pending</li>
+              <li>Room maintenance - Completed</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Student View -->
+        <div class="role-view hidden" data-role="Student">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div class="card"><div class="text-sm muted">Attendance</div><div class="text-2xl font-bold mt-2">92%</div></div>
+            <div class="card"><div class="text-sm muted">GPA (Semester)</div><div class="text-2xl font-bold mt-2">8.4</div></div>
+            <div class="card"><div class="text-sm muted">Pending Fees</div><div class="text-2xl font-bold mt-2">₹0</div></div>
+          </div>
+          <div class="card mb-4">
+            <h3 class="font-semibold mb-2">Upcoming Classes</h3>
+            <ul class="muted space-y-2">
+              <li>Math - 10:00</li>
+              <li>English - 11:30</li>
+            </ul>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="card">
+              <h3 class="font-semibold mb-2">Recent Marks</h3>
+              <div class="muted">Math: 84 | Science: 78 | English: 91</div>
+            </div>
+            <div class="card">
+              <h3 class="font-semibold mb-2">Notices</h3>
+              <ul class="muted space-y-2"><li>Exam on Dec 2</li><li>Sports day on Nov 10</li></ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security Staff View -->
+        <div class="role-view hidden" data-role="Security Staff">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div class="card"><div class="text-sm muted">Visitors Today</div><div class="text-2xl font-bold mt-2">14</div></div>
+            <div class="card"><div class="text-sm muted">Incidents</div><div class="text-2xl font-bold mt-2">0</div></div>
+            <div class="card"><div class="text-sm muted">Vehicles</div><div class="text-2xl font-bold mt-2">6</div></div>
+          </div>
+          <div class="card">
+            <h3 class="font-semibold mb-2">Visitor Log (Today)</h3>
+            <table class="w-full text-sm muted">
+              <thead class="text-left"><tr><th>Name</th><th>Purpose</th><th>Time</th></tr></thead>
+              <tbody>
+                <tr><td>Mr. Kumar</td><td>Delivery</td><td>09:20</td></tr>
+                <tr><td>Mrs. Roy</td><td>Parent Meeting</td><td>10:50</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Receptionist / Front Desk View -->
+        <div class="role-view hidden" data-role="Receptionist / Front Desk">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div class="card"><div class="text-sm muted">Appointments</div><div class="text-2xl font-bold mt-2">8</div></div>
+            <div class="card"><div class="text-sm muted">Visitors Waiting</div><div class="text-2xl font-bold mt-2">2</div></div>
+            <div class="card"><div class="text-sm muted">Calls</div><div class="text-2xl font-bold mt-2">3</div></div>
+          </div>
+          <div class="card">
+            <h3 class="font-semibold mb-2">Today’s Bookings & Visitors</h3>
+            <ul class="muted space-y-2"><li>10:00 - Parent - Meets Principal</li><li>11:30 - Delivery - Stationery</li></ul>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    // Role switching logic (no backend) - instantly switches prototypes
+    const select = document.getElementById('roleSelect');
+    const views = Array.from(document.querySelectorAll('.role-view'));
+
+    function showRole(role) {
+      views.forEach(v => {
+        if (v.dataset.role === role) {
+          v.classList.remove('hidden');
+        } else {
+          v.classList.add('hidden');
+        }
+      });
+      document.getElementById('page-title').textContent = role + ' Dashboard';
+    }
+
+    // init
+    showRole(select.value);
+    select.addEventListener('change', (e) => showRole(e.target.value));
+
+    // allow quick role switch via URL param ?role=Student
+    const params = new URLSearchParams(location.search);
+    if (params.has('role')) {
+      const r = params.get('role');
+      const option = Array.from(select.options).find(o => o.value.toLowerCase() === r.toLowerCase());
+      if (option) { select.value = option.value; showRole(option.value); }
+    }
+  </script>
+</body>
+</html>
